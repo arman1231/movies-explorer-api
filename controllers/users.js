@@ -21,11 +21,11 @@ module.exports.getUser = (req, res, next) => {
     .catch(next);
 };
 module.exports.updateUser = (req, res, next) => {
-  const { name, about } = req.body;
+  const { name, email } = req.body;
   User.findOneAndUpdate(
     { _id: req.user._id },
     {
-      $set: { name, about },
+      $set: { name, email },
     },
     {
       runValidators: true,
@@ -43,17 +43,17 @@ module.exports.updateUser = (req, res, next) => {
 };
 module.exports.createUser = (req, res, next) => {
   const {
-    email, password, name, about, avatar,
+    email, password, name,
   } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => {
       User.create({
-        email, password: hash, name, about, avatar,
+        email, password: hash, name,
       })
         .then(() => {
           res.status(201).send({
             data: {
-              name, about, avatar, email,
+              name, email,
             },
           });
         })
@@ -94,6 +94,5 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.logout = (req, res) => {
-  res.clearCookie('name', { path: '/admin' });
-  res.status(201).send('Cookie has been cleared');
+  res.status(200).clearCookie('jwt').send('Cookie has been cleared').end();
 };

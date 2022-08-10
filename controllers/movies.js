@@ -4,11 +4,13 @@ const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-err');
 
 module.exports.getSavedMovies = (req, res, next) => {
-  Movie.find({})
-    .then((movies) => res.send(movies))
+  Movie.find({ owner: req.user._id }).populate('owner')
+    .then((movies) => {
+      res.send({ data: movies });
+    })
     .catch(next);
 };
-module.exports.createMovie = (req) => {
+module.exports.createMovie = (req, res, next) => {
   const {
     country,
     director, duration, year, description, image, trailer, nameRU, nameEN, thumbnail, movieId,
@@ -26,7 +28,17 @@ module.exports.createMovie = (req) => {
     thumbnail,
     movieId,
     owner: req.user._id,
-  });
+  })
+    .then((movie) => {
+      res.send({ data: movie });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Wrong input data'));
+      } else {
+        next(err);
+      }
+    });
 };
 module.exports.deleteSavedMovie = (req, res, next) => {
   const { movieId } = req.params;

@@ -2,16 +2,25 @@ const { celebrate, Joi } = require('celebrate');
 // eslint-disable-next-line no-useless-escape
 const urlRegEx = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
 
-const validateCreateCard = celebrate({
+const validateCreateMovie = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(urlRegEx),
+    country: Joi.string().required(),
+    director: Joi.string().required(),
+    duration: Joi.number().required(),
+    year: Joi.string().required(),
+    description: Joi.string().required(),
+    image: Joi.string().required().pattern(urlRegEx),
+    trailerLink: Joi.string().required().pattern(urlRegEx),
+    nameRU: Joi.string().required(),
+    nameEN: Joi.string().required(),
+    thumbnail: Joi.string().required().pattern(urlRegEx),
+    movieId: Joi.number().required(),
   }),
 });
 
-const validateCardId = celebrate({
+const validateMovieId = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required().length(24).hex(),
+    _id: Joi.string().required().length(24).hex(),
   }),
 });
 
@@ -38,8 +47,8 @@ const validateUpdateUser = celebrate({
 });
 
 module.exports = {
-  validateCreateCard,
-  validateCardId,
+  validateCreateMovie,
+  validateMovieId,
   validateCreateUser,
   validateLogin,
   validateUpdateUser,
