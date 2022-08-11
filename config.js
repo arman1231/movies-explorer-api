@@ -1,6 +1,6 @@
 const {
   DB = 'mongodb://localhost:27017/moviesdb',
-  PORT = 3001,
+  PORT = 3002,
   NODE_ENV,
   JWT_SECRET,
 } = process.env;
