@@ -9,11 +9,10 @@ const UnauthorizedError = require('../errors/unauthorized-err');
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.getUser = (req, res, next) => {
-  const { userId } = req.params;
-  User.findById({ _id: userId })
+  User.findById({ _id: req.user._id })
     .then((user) => {
       if (!user) {
-        throw new NotFoundError(`${userId} not found`);
+        throw new NotFoundError(`${req.user._id} not found`);
       } else {
         res.send(user);
       }
@@ -94,5 +93,5 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.logout = (req, res) => {
-  res.status(200).clearCookie('jwt').send('Cookie has been cleared').end();
+  res.status(200).clearCookie('jwt').send({ message: 'Cookie has been cleared' }).end();
 };
