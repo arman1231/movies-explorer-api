@@ -4,14 +4,16 @@ const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-err');
 
 module.exports.getSavedMovies = (req, res, next) => {
-  Movie.find({})
-    .then((movies) => res.send(movies))
+  Movie.find({ owner: req.user._id }).populate('owner')
+    .then((movies) => {
+      res.send({ data: movies });
+    })
     .catch(next);
 };
-module.exports.createMovie = (req) => {
+module.exports.createMovie = (req, res, next) => {
   const {
     country,
-    director, duration, year, description, image, trailer, nameRU, nameEN, thumbnail, movieId,
+    director, duration, year, description, image, trailerLink, nameRU, nameEN, thumbnail, movieId,
   } = req.body;
   Movie.create({
     country,
@@ -20,24 +22,33 @@ module.exports.createMovie = (req) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     nameRU,
     nameEN,
     thumbnail,
     movieId,
     owner: req.user._id,
-  });
+  })
+    .then((movie) => {
+      res.send({ data: movie });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Wrong input data'));
+      } else {
+        next(err);
+      }
+    });
 };
 module.exports.deleteSavedMovie = (req, res, next) => {
-  const { movieId } = req.params;
-  Movie.findById({ _id: movieId })
+  Movie.findById({ _id: req.params._id })
     .then((movie) => {
       if (!movie) {
         throw new NotFoundError('movie is not found');
       } else if (movie.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Not authorized to remove');
       } else {
-        Movie.remove({ _id: movieId })
+        Movie.remove({ _id: req.params._id })
           .then((specificMovie) => {
             if (!specificMovie) {
               throw new NotFoundError('movie is not found');

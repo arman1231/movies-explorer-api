@@ -1,47 +1,50 @@
 const mongoose = require('mongoose');
+const isURL = require('validator/lib/isURL');
 
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
     required: true,
-    minlength: 2,
-    maxlength: 30,
   },
   director: {
     type: String,
     required: true,
-    minlength: 2,
-    maxlength: 30,
   },
   duration: {
     type: Number,
     required: true,
-    minlength: 2,
-    maxlength: 30,
   },
   year: {
     type: String,
     required: true,
-    minlength: 2,
-    maxlength: 30,
   },
   description: {
     type: String,
     required: true,
-    minlength: 2,
-    maxlength: 30,
   },
   image: {
     type: String,
     required: true,
+    validate: {
+      validator: (v) => isURL(v),
+      message: 'Некорректная ссылка.',
+    },
   },
   trailerLink: {
     type: String,
     required: true,
+    validate: {
+      validator: (v) => isURL(v),
+      message: 'Некорректная ссылка.',
+    },
   },
   thumbnail: {
     type: String,
     required: true,
+    validate: {
+      validator: (v) => isURL(v),
+      message: 'Некорректная ссылка.',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -49,7 +52,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   movieId: {
-    type: String,
+    type: Number,
     required: true,
   },
   nameRU: {
