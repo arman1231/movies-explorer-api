@@ -6,10 +6,18 @@ const ForbiddenError = require('../errors/forbidden-err');
 module.exports.getSavedMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id }).populate('owner')
     .then((movies) => {
-      res.send({ data: movies });
+      res.send(movies);
     })
     .catch(next);
 };
+// module.exports.getSavedMovies = (req, res, next) => {
+//   Movie.find()
+//     .then((movies) => {
+//       res.send(movies);
+//     })
+//     .catch(next);
+// };
+
 module.exports.createMovie = (req, res, next) => {
   const {
     country,
@@ -30,7 +38,7 @@ module.exports.createMovie = (req, res, next) => {
     owner: req.user._id,
   })
     .then((movie) => {
-      res.send({ data: movie });
+      res.send(movie);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

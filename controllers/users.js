@@ -49,12 +49,20 @@ module.exports.createUser = (req, res, next) => {
       User.create({
         email, password: hash, name,
       })
-        .then(() => {
-          res.status(201).send({
-            data: {
-              name, email,
-            },
-          });
+        .then((newUser) => {
+          const token = jwt.sign({ _id: newUser._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+          res
+            .cookie('jwt', token, {
+              maxAge: 3600000 * 24 * 7,
+              httpOnly: true,
+              secure: true,
+              sameSite: true,
+            })
+            .status(201).send({
+              data: {
+                name, email,
+              },
+            });
         })
         .catch((err) => {
           if (err.name === 'ValidationError') {

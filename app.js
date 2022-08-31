@@ -1,5 +1,6 @@
 const express = require('express');
 require('dotenv').config();
+// const jwt = require('express-jwt');
 const helmet = require('helmet');
 const cors = require('cors');
 
@@ -7,6 +8,9 @@ const options = {
   origin: [
     'localhost:3000',
     'http://localhost:3000',
+    'http://localhost:3002',
+    'localhost:3002',
+    'localhost/:1',
   ],
   credentials: true, // эта опция позволяет устанавливать куки
 };
@@ -29,6 +33,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect(DB);
 app.use(cookieParser());
+// app.use(
+//   jwt({
+//     secret: 'secret123',
+//     getToken: req => req.cookies.token,
+//   }),
+// );
 app.use(routes);
 app.use(errorLogger);
 app.use(errors());
