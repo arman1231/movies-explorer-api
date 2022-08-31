@@ -11,6 +11,10 @@ const options = {
     'http://localhost:3002',
     'localhost:3002',
     'localhost/:1',
+    'https://api.movieexplorer.cherkharov.com',
+    'http://api.movieexplorer.cherkharov.com',
+    'https://moviesexplorer.cherkharov.com/',
+    'http://moviesexplorer.cherkharov.com/',
   ],
   credentials: true, // эта опция позволяет устанавливать куки
 };
