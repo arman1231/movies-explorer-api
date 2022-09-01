@@ -11,10 +11,12 @@ const options = {
     'http://localhost:3002',
     'localhost:3002',
     'localhost/:1',
+    'localhost:3008',
+    'localhost:3009',
     'https://api.movieexplorer.cherkharov.com',
     'http://api.movieexplorer.cherkharov.com',
-    'https://moviesexplorer.cherkharov.com/',
-    'http://moviesexplorer.cherkharov.com/',
+    'https://moviesexplorer.cherkharov.com',
+    'http://moviesexplorer.cherkharov.com',
   ],
   credentials: true, // эта опция позволяет устанавливать куки
 };
@@ -30,9 +32,9 @@ const { DB, PORT } = require('./config');
 
 const app = express();
 app.use(requestLogger);
+app.use('*', cors(options));
 app.use(helmet());
 app.use(limiter);
-app.use('*', cors(options));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect(DB);

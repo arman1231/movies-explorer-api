@@ -60,7 +60,7 @@ module.exports.createUser = (req, res, next) => {
             })
             .status(201).send({
               data: {
-                token,
+                email, name,
               },
             });
         })
